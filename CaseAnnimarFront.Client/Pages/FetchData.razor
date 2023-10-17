@@ -1,0 +1,58 @@
+﻿@page "/pessoas"
+@inject HttpClient Http
+@using System.Net.Http
+@using System.Net.Http.Json
+@using CaseAnnimar.Application.Models
+
+<PageTitle>Listagem de pessoas</PageTitle>
+
+<h1>Listagem de pessoas</h1>
+
+<p>Fornece a listagem de pessoas</p>
+
+@if (pessoas == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Sobrenome</th>
+                <th>Data de Nascimento</th>
+                <th>Data de Inserção</th>
+                <th>Profissão</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (pessoas != null)
+            {
+                foreach (var pessoa in pessoas)
+                {
+                    <tr>
+                        <td>@pessoa.Id</td>
+                        <td>@pessoa.Nome</td>
+                        <td>@pessoa.Sobrenome</td>
+                        <td>@pessoa.DataNascimento.ToShortDateString()</td>
+                        <td>@pessoa.DataInsercao.ToShortDateString()</td>
+                        <td>@pessoa.Profissao</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Pessoa[]? pessoas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Substitua a URL apropriada para buscar dados de pessoas
+        var pessoas = await Http.GetFromJsonAsync<Pessoa[]>("https://localhost:7118/api/pessoas");
+        Console.WriteLine(pessoas);
+    }
+}

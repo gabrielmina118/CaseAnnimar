@@ -1,0 +1,49 @@
+﻿@page "/pessoas"
+@using CaseAnnimar.Application.Models;
+@inject HttpClient httpClient
+
+<h3>Listagem de Pessoas</h3>
+
+@if(pessoasList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Sobrenome</th>
+                <th>Data de Nascimento</th>
+                <th>Profissão</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pessoa in pessoasList)
+            {
+                <tr>
+                    <td>@pessoa.Nome</td>
+                    <td>@pessoa.Sobrenome</td>
+                    <td>@pessoa.DataNascimento.ToShortDateString()</td>
+                    <td>@pessoa.Profissao</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@code {
+    private List<Pessoa>? pessoasList;
+    private Pessoa pessoa = new Pessoa();
+
+    protected override async Task OnInitializedAsync()
+    {
+        pessoasList = await httpClient.GetFromJsonAsync<List<Pessoa>>($"Pessoa/GetPessoas");
+        await base.OnInitializedAsync();
+    }
+
+
+}
